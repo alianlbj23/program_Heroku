@@ -37,6 +37,8 @@ play_time_star = list()
 global point
 point = 0
 def index(request, pk):
+    global point 
+    point = 0
     ans_register = list()
     '''
     path = './使用者資料/短期記憶/' + str(name) + '/' 
@@ -231,6 +233,7 @@ def AttentionGame(request, pk, n, gameName):
 
 def AttentionGameAjax(request, pk):
     global point
+    point = 0
     ans_register = list()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         ans1 = int(request.GET.get("ans1"))
