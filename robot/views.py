@@ -214,16 +214,16 @@ def sort_term_memory_ajax(request, pk):
             score = 0
         userdata = Userdata.objects.get(pk=pk)
         point = score
-        print("point in sort", point)
+        
         ans_register.append(score)
         gamemod = GameMod.objects.get(username=userdata, game_mod="SortTermMemoryGame")
-        
+        data_list = [score, ]
         New = Sort_term_memory.objects.create(mod=gamemod, correct_rate=score, costTime=int(count),
         memoryTime=memoryTime)
         New.save()
 
         
-    return JsonResponse(answer1, safe=False)
+    return JsonResponse(score, safe=False)
 
 def AttentionGame(request, pk, n, gameName):
     tmp = Userdata.objects.get(pk=pk)
@@ -352,7 +352,7 @@ def OrientationAjax(request, pk):
         newOrientationData = Orientation.objects.create(mod=gamemod, correct_rate=score, memoryTime=memoryTime,
         costTime=costtime)
         newOrientationData.save()
-        return JsonResponse(correct, safe=False)
+        return JsonResponse(score, safe=False)
 
 def OrientationPadGame(request, pk, n, gameName):
     tmp = Userdata.objects.get(pk=pk)

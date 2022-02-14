@@ -296,7 +296,8 @@
     {% endfor %}
 </div>
 
-<button style="display:none" class="endButton"><a href="/settlement/{{ pk }}/OrientationGame/">送出</a></button>
+<button style="display:none" class="endButton">送出</button>
+<div id="insert"></div>
 <p id="countdown0" class="memoryTime" style="display:none">0</p>
 <p id="countdown" class="after">0</p>
 {% endblock %}
@@ -509,7 +510,13 @@
                     "count_number": count_number,
                     "memoryTime": memoryTime,
                 },
-                success: function () {
+                success: function (e) {
+                    var point = e
+                    console.log(point)
+                    $(".endButton").css("display", 'none')
+                    $("#insert").append(`<h1><span style="color:black">分數:${point}</span></h1>`)
+                    $("#insert").append(`<h1><span style="color:black">作答時間:${count_number}</span></h1>`)
+                    $("#insert").append(`<a href="/index/{{pk}}/"><h1>返回首頁</h1></a>`)
                 }
             })
         })

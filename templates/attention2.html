@@ -77,8 +77,11 @@
                     "ans2": ans_time[1],
                     "ans3": ans_time[2],
                 },
-                success: function () {
-
+                success: function (e) {
+                    var point = e
+                    $(".button2").css("display", 'none')
+                    $("#insert").append(`<h1><span style="color:black">分數:${point}</span></h1>`)
+                    $("#insert").append(`<a href="/index/{{pk}}/"><h1>返回首頁</h1></a>`)
                 }
             })
         });
@@ -493,7 +496,8 @@
         <br/><br/>
         <button class="erroBtn" style="display: none">錯誤</button>
         <a> &nbsp; &nbsp; &nbsp; </a>
-        <a href='/settlement/{{ pk }}/AttentionGame/'><button class="button2" style="display: none">遊戲結束</button></a>
+        <button class="button2" style="display: none">遊戲結束</button>
+        <div id="insert"></div>
     </div>
 </div>
 <p id="countdown" style="display:none">0</p>

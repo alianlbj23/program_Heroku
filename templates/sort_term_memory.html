@@ -74,7 +74,12 @@
                     "count": count_number,
                     "memoryTime": memoryTime,
                 },
-                success: function(){
+                success: function(e){
+                    var point = e
+                    $("#nextbtn").css("display", 'none')
+                    $("#insert").append(`<h1><span style="color:black">分數:${point}</span></h1>`)
+                    $("#insert").append(`<h1><span style="color:black">作答時間:${count_number}</span></h1>`)
+                    $("#insert").append(`<a href="/index/{{pk}}/"><h1>返回首頁</h1></a>`)
                 }
             })
         });
@@ -282,7 +287,8 @@
             {% endfor %}
         </div>  
         <br>
-        <a href="/settlement/{{ pk }}/SortTermMemoryGame/"<button id="nextbtn" class="after okButton">送出</button></a>
+        <button id="nextbtn" class="after okButton">送出</button>
+        <div id="insert"></div>
         <br><br>
         <p id="countdown0" class="memoryTime" style="display:none">0</p>
         <p id="countdown" class="after">0</p>
