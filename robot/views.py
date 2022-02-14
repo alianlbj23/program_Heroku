@@ -139,6 +139,8 @@ def SortTermMemoryGame(request, pk, n, gameName):
     if new.count() == 0:#如果玩家沒有短期記憶的資料這裡新增一個
         new = GameMod.objects.create(username = tmp, game_mod="SortTermMemoryGame")
         new.save()
+        new_tmp = GameMod.objects.get(username = tmp, game_mod="SortTermMemoryGame")
+        new2 = Sort_term_memory.objects.create(mod=new_tmp, correct_rate=0, memoryTime=0,costTime=0)
     #path = './media/stm_picture2'
     path2 = '/media/stm_picture2'
     #/media/stm_picture2//各種生活器具/0642544_PE701242_S5.jpg
@@ -265,7 +267,7 @@ def AttentionGameAjax(request, pk):
         new = Attention.objects.create(mod=gamemod, correct_rate=correct)
         new.save()
         '''
-        return JsonResponse(ans1, safe=False)
+        return JsonResponse(correct, safe=False)
 
 
 
