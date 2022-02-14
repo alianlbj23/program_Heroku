@@ -37,6 +37,7 @@ play_time_star = list()
 global point
 point = 0
 def index(request, pk):
+    ans_register = list()
     '''
     path = './使用者資料/短期記憶/' + str(name) + '/' 
     print("aaaaaaaaaaaaaaaa")
@@ -176,6 +177,7 @@ def SortTermMemoryGame(request, pk, n, gameName):
 
 def sort_term_memory_ajax(request, pk):
     c_total = list()
+    ans_register = list()
     key = 0
     global point
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -208,6 +210,8 @@ def sort_term_memory_ajax(request, pk):
             score = 0
         userdata = Userdata.objects.get(pk=pk)
         point = score
+        print("point in sort", point)
+        ans_register.append(score)
         gamemod = GameMod.objects.get(username=userdata, game_mod="SortTermMemoryGame")
         
         New = Sort_term_memory.objects.create(mod=gamemod, correct_rate=score, costTime=int(count),
@@ -227,6 +231,7 @@ def AttentionGame(request, pk, n, gameName):
 
 def AttentionGameAjax(request, pk):
     global point
+    ans_register = list()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         ans1 = int(request.GET.get("ans1"))
         ans2 = int(request.GET.get("ans2"))
@@ -249,7 +254,7 @@ def AttentionGameAjax(request, pk):
         gamemod = GameMod.objects.get(username=userdata, game_mod="AttentionGame")
         NewAttentionData = Attention.objects.create(mod=gamemod, correct_rate=correct)
         NewAttentionData.save()
-        
+        ans_register = correct
         #-----------------------資料庫測試
         '''
         username = UserName.objects.get(name=str(name))
@@ -264,19 +269,23 @@ def AttentionGameAjax(request, pk):
 
 def settlement(request, pk, gameMod):
     #try:
+    global point
     tmp = Userdata.objects.get(pk=pk)
     gameModData = GameMod.objects.get(username=tmp, game_mod=gameMod)
     count = 0
-    global point
+    print("point!!!!!!!!!", point)
     #短期記憶的設計要等到資料都有了才寫進資料庫，故在結算時才將資料寫入
     if gameMod == "SortTermMemoryGame":
         sorttermmemory = Sort_term_memory.objects.filter(mod=gameModData).first()
+        p = point
         count = Sort_term_memory.objects.filter(mod=gameModData).count()
     if gameMod == "AttentionGame":
         attention = Attention.objects.filter(mod=gameModData).first()
+        p = point
         count = Attention.objects.filter(mod=gameModData).count()
     if gameMod == "OrientationGame":
         OrientationGame = Orientation.objects.filter(mod=gameModData).first()
+        p = point
         count = Orientation.objects.filter(mod=gameModData).count()
     #except:
         #return redirect('/index/'+str(pk)+'/')
@@ -317,6 +326,7 @@ def OrientationGame(request, pk, n, gameName):
 
 def OrientationAjax(request, pk):
     global point
+    ans_register = list()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         correct = int(request.GET.get("correct"))
         costtime = int(request.GET.get("count_number"))
@@ -333,6 +343,7 @@ def OrientationAjax(request, pk):
         elif correct == 4:
             score = 100
         point = score
+        ans_register.append(score)
         newOrientationData = Orientation.objects.create(mod=gamemod, correct_rate=score, memoryTime=memoryTime,
         costTime=costtime)
         newOrientationData.save()
