@@ -1,3 +1,4 @@
+from ctypes import pointer
 from django.core.checks import messages
 from django.forms.widgets import PasswordInput
 from django.http.response import JsonResponse
@@ -33,7 +34,8 @@ from time import time
 ans_register = list() #紀錄對或錯
 timer_register = list()#紀錄時間
 play_time_star = list()
-
+global point
+point = 0
 def index(request, pk):
     '''
     path = './使用者資料/短期記憶/' + str(name) + '/' 
@@ -175,7 +177,7 @@ def SortTermMemoryGame(request, pk, n, gameName):
 def sort_term_memory_ajax(request, pk):
     c_total = list()
     key = 0
-    
+    global point
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         score = 0
         answer1 = request.GET.get('answer1')
@@ -205,7 +207,7 @@ def sort_term_memory_ajax(request, pk):
         else:
             score = 0
         userdata = Userdata.objects.get(pk=pk)
-        
+        point = score
         gamemod = GameMod.objects.get(username=userdata, game_mod="SortTermMemoryGame")
         
         New = Sort_term_memory.objects.create(mod=gamemod, correct_rate=score, costTime=int(count),
@@ -224,6 +226,7 @@ def AttentionGame(request, pk, n, gameName):
     return render(request, 'attention2.html',locals())
 
 def AttentionGameAjax(request, pk):
+    global point
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         ans1 = int(request.GET.get("ans1"))
         ans2 = int(request.GET.get("ans2"))
@@ -241,7 +244,7 @@ def AttentionGameAjax(request, pk):
                 correct += 23
         if correct == 99:
             correct = 100
-
+        point = correct
         userdata = Userdata.objects.get(pk=pk)
         gamemod = GameMod.objects.get(username=userdata, game_mod="AttentionGame")
         NewAttentionData = Attention.objects.create(mod=gamemod, correct_rate=correct)
@@ -264,6 +267,7 @@ def settlement(request, pk, gameMod):
     tmp = Userdata.objects.get(pk=pk)
     gameModData = GameMod.objects.get(username=tmp, game_mod=gameMod)
     count = 0
+    global point
     #短期記憶的設計要等到資料都有了才寫進資料庫，故在結算時才將資料寫入
     if gameMod == "SortTermMemoryGame":
         sorttermmemory = Sort_term_memory.objects.filter(mod=gameModData).first()
@@ -312,7 +316,7 @@ def OrientationGame(request, pk, n, gameName):
     return render(request, 'Orientation2.html', locals())
 
 def OrientationAjax(request, pk):
-    
+    global point
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         correct = int(request.GET.get("correct"))
         costtime = int(request.GET.get("count_number"))
@@ -328,7 +332,7 @@ def OrientationAjax(request, pk):
             score = 66
         elif correct == 4:
             score = 100
-        
+        point = score
         newOrientationData = Orientation.objects.create(mod=gamemod, correct_rate=score, memoryTime=memoryTime,
         costTime=costtime)
         newOrientationData.save()
